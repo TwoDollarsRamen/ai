@@ -1,5 +1,3 @@
-#include <SDL2/SDL.h>
-
 #include "stb_image.h"
 
 #include "renderer.hpp"
@@ -13,7 +11,7 @@ void renderer::clear() const {
 	SDL_FillRect(backbuffer, &screen_rect, 0x0);
 }
 
-void renderer::draw(const vec2& position, SDL_Surface* surface, const SDL_Rect& rect) const {
+void renderer::draw(const vec2& position, SDL_Surface* surface, const SDL_Rect& rect) const {	
 	SDL_Surface* backbuffer = SDL_GetWindowSurface(window);
 
 	/* The destination position, width and height are multiplied

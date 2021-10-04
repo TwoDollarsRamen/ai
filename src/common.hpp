@@ -1,3 +1,5 @@
+#pragma once
+
 #include <stdint.h>
 
 /* Being able to specify the size of integers

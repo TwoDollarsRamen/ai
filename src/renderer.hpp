@@ -3,9 +3,9 @@
 #include <string>
 #include <unordered_map>
 
-#include "common.hpp"
+#include <SDL2/SDL.h>
 
-struct SDL_Window;
+#include "common.hpp"
 
 struct sprite {
 	SDL_Surface* surface;

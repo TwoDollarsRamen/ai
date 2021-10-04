@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
 
+#include "level.hpp"
 #include "renderer.hpp"
 
 i32 main(i32 argc, char** argv) {
@@ -13,6 +14,9 @@ i32 main(i32 argc, char** argv) {
 
 	SDL_Surface* atlas = texture_manager::load("res/atlas.png");
 
+	level l;
+	l.load("res/level.dat");
+
 	bool running = true;
 	while (running) {
 		SDL_Event e;
@@ -23,7 +27,9 @@ i32 main(i32 argc, char** argv) {
 		}
 
 		ren.clear();
-		ren.draw(vec2(100, 100), atlas, { 0, 0, atlas->w, atlas->h});
+		//ren.draw(vec2(100, 100), atlas, { 0, 0, atlas->w, atlas->h});
+
+		l.draw(ren);
 
 		SDL_UpdateWindowSurface(window);
 	}
