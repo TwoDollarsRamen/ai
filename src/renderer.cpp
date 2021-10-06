@@ -79,6 +79,8 @@ SDL_Surface* texture_manager::load(const char* filename) {
 
 	stbi_image_free(pixels);
 
+	instance().cache[std::string(filename)] = surface;
+
 	return surface;
 }
 

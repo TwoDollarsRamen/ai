@@ -23,13 +23,29 @@ struct tile_layer {
 };
 
 class level {
+public:
+	/* Pathfinding stuff */
+	struct node {
+		bool obstacle = false;
+		bool visited = false;
+		float global_goal;
+		float local_goal;
+		i32 x, y;
+		std::vector<node*> neighbours;
+		node* parent = nullptr;
+	};
+
 private:
 	std::vector<tileset> tilesets;
 	std::vector<tile_layer> layers;
 
-public:
+	node* nodes = nullptr;
+	i32 map_width, map_height;
+public:	
 	~level();
 
 	void draw(const renderer& ren) const;
 	bool load(const char* filename);
+
+	std::vector<vec2> find_path(i32 start_x, i32 start_y, i32 end_x, i32 end_y);
 };

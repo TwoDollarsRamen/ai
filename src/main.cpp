@@ -17,6 +17,8 @@ i32 main(i32 argc, char** argv) {
 	level l;
 	l.load("res/level.dat");
 
+	auto path = l.find_path(3, 3, 5, 8);
+
 	bool running = true;
 	while (running) {
 		SDL_Event e;
@@ -27,9 +29,12 @@ i32 main(i32 argc, char** argv) {
 		}
 
 		ren.clear();
-		//ren.draw(vec2(100, 100), atlas, { 0, 0, atlas->w, atlas->h});
 
 		l.draw(ren);
+
+		for (const auto& node : path) {
+			ren.draw(vec2(node.x * 16, node.y * 16), atlas, { 64, 144, 16, 16 });
+		}
 
 		SDL_UpdateWindowSurface(window);
 	}
