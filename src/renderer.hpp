@@ -18,9 +18,9 @@ class renderer {
 private:
 	mutable SDL_Window* window;
 
-	const i32 pixel_size;
+	const int pixel_size;
 public:
-	renderer(SDL_Window* window, u32 pixel_size) : window(window), pixel_size(pixel_size) {}
+	renderer(SDL_Window* window, int pixel_size) : window(window), pixel_size(pixel_size) {}
 
 	void clear() const;
 	void draw(const vec2& position, SDL_Surface* surface, const SDL_Rect& rect) const;

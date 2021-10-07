@@ -24,8 +24,8 @@ level::~level() {
 
 void level::draw(const renderer& ren) const {
 	for (const auto& layer : layers) {
-		for (u32 y = 0; y < layer.height; y++) {
-			for (u32 x = 0; x < layer.width; x++) {
+		for (int y = 0; y < layer.height; y++) {
+			for (int x = 0; x < layer.width; x++) {
 				tile t = layer.tiles[x + y * layer.width];
 				if (t.id != -1) {
 					const tileset& set = tilesets[t.tileset_id];
@@ -54,21 +54,21 @@ bool level::load(const char* filename) {
 		return false;
 	}
 
-	u32 tileset_count;
+	int tileset_count;
 	file.read(buf(tileset_count), 4);
 
-	for (u32 i = 0; i < tileset_count; i++) {
+	for (int i = 0; i < tileset_count; i++) {
 		tileset current;
 
 		/* Read the tileset name */
-		u32 name_size;
+		int name_size;
 		file.read(buf(name_size), 4);
 		current.name = (char*)malloc(name_size + 1);
 		file.read(current.name, name_size);
 		current.name[name_size] = '\0';
 
 		/* Read the tileset file path */
-		u32 path_size;
+		int path_size;
 		file.read(buf(path_size), 4);
 
 		char* path = (char*)malloc(path_size + 1);
@@ -85,9 +85,9 @@ bool level::load(const char* filename) {
 		tilesets.push_back(current);
 	}
 
-	u32 layer_count;
+	int layer_count;
  	file.read(buf(layer_count), 4);
-	for (u32 i = 0; i < layer_count; i++) {
+	for (int i = 0; i < layer_count; i++) {
 		tile_layer current;
 
 		/* Keeps track of whether or not the layer should be pushed back into the vector.
@@ -95,7 +95,7 @@ bool level::load(const char* filename) {
 		bool want_storage = true; 
 
 		{
-			u32 name_size;
+			int name_size;
 			file.read(buf(name_size), 4);
 			current.name = (char*)malloc(name_size + 1);
 			file.read(current.name, name_size);
@@ -103,7 +103,7 @@ bool level::load(const char* filename) {
 		}
 
 		/* -1 = unknown, 0 = tiles, 1 = objects */
-		i32 layer_type;
+		int layer_type;
 		file.read(buf(layer_type), 4);
 
 		switch (layer_type) {
@@ -114,20 +114,20 @@ bool level::load(const char* filename) {
 
 				current.tiles = (tile*)malloc(sizeof(tile) * current.width * current.height);
 
-				for (i32 y = 0; y < current.height; y++) {
-					for (i32 x = 0; x < current.width; x++) {
-						i32 id;
+				for (int y = 0; y < current.height; y++) {
+					for (int x = 0; x < current.width; x++) {
+						int id;
 						file.read(buf(id), 4);
-						u32 tileset_idx = 0;
+						int tileset_idx = 0;
 						if (id != -1) { /* -1 indicates an empty tile. */
 							/* This code transforms the tile ID from something
 							 * that is global to and ID that is relative to the
 							 * index of the tileset that it belongs to. This makes
 							 * it much faster to lookup the tile's tileset when
 							 * it comes to rendering. */
-							for (u32 ii = 0; ii < tilesets.size(); ii++) {
+							for (int ii = 0; ii < tilesets.size(); ii++) {
 								const tileset& tileset = tilesets[ii];
-								i32 tile_count = (tileset.image->w / tileset.tile_w) *
+								int tile_count = (tileset.image->w / tileset.tile_w) *
 									(tileset.image->h / tileset.tile_h);
 
 								if (id >= tile_count) {
@@ -139,7 +139,7 @@ bool level::load(const char* filename) {
 							}
 						}
 
-						current.tiles[x + y * (u32)current.width] = tile {
+						current.tiles[x + y * (int)current.width] = tile {
 								.id = id,
 								.tileset_id = tileset_idx
 							};
@@ -155,9 +155,9 @@ bool level::load(const char* filename) {
 
 				nodes = new node[map_width * map_height];
 
-				for (i32 y = 0; y < map_height; y++) {
-					for (i32 x = 0; x < map_width; x++) {
-						i32 tile_id;
+				for (int y = 0; y < map_height; y++) {
+					for (int x = 0; x < map_width; x++) {
+						int tile_id;
 						file.read(buf(tile_id), 4);
 
 						nodes[x + y * map_width] = node {
@@ -173,8 +173,8 @@ bool level::load(const char* filename) {
 				}
 
 				/* Link up the pathfinding nodes with their neighbours */
-				for (i32 y = 0; y < map_height; y++) {
-					for (i32 x = 0; x < map_width; x++) {
+				for (int y = 0; y < map_height; y++) {
+					for (int x = 0; x < map_width; x++) {
 						node* node = nodes + (x + y * map_width);
 
 						if (y > 0) {
@@ -190,7 +190,7 @@ bool level::load(const char* filename) {
 									&nodes[(x - 1) + y * map_width]);
 						}
 						if (x < map_width - 1) {
-							nodes->neighbours.push_back(
+							node->neighbours.push_back(
 									&nodes[(x + 1) + y * map_width]);
 						}
 					}
@@ -215,10 +215,10 @@ bool level::load(const char* filename) {
 	return true;
 }
 
-std::vector<vec2> level::find_path(i32 start_x, i32 start_y, i32 end_x, i32 end_y) {
+std::vector<vec2> level::find_path(int start_x, int start_y, int end_x, int end_y) {
 	/* Reset the navigation graph */
-	for (u32 y = 0; y < map_height; y++) {
-		for (u32 x = 0; x < map_width; x++) {
+	for (int y = 0; y < map_height; y++) {
+		for (int x = 0; x < map_width; x++) {
 			nodes[x + y * map_width].visited = false;
 			nodes[x + y * map_width].global_goal = std::numeric_limits<float>::max();
 			nodes[x + y * map_width].local_goal = std::numeric_limits<float>::max();
@@ -230,45 +230,58 @@ std::vector<vec2> level::find_path(i32 start_x, i32 start_y, i32 end_x, i32 end_
 		return sqrtf((a->x - b->x) * (a->x - b->x) + (a->y - b->y) * (a->y - b->y));
 	};
 
-	auto start = &nodes[start_x + start_y * map_width];
-	auto end   = &nodes[end_x + end_y * map_width];
+	auto start = nodes + (start_x + start_y * map_width);
+	auto end   = nodes + (end_x + end_y * map_width);
 
 	start->local_goal = 0.0f;
 	start->global_goal = distance(start, end);
 
 	auto current = start;
 
-	std::list<node*> not_tested;
-	not_tested.push_back(start);
+	std::list<node*> to_test;
+	to_test.push_back(start);
 
-	while (!not_tested.empty() && current != end) {
-		not_tested.sort([](const node* a, const node* b) -> bool {
+	while (!to_test.empty()) {
+		/* Sort the untested nodes so that the node with the lowest goal comes first. */
+		to_test.sort([](const node* a, const node* b) -> bool {
 					return a->global_goal < b->global_goal;
 				});
 
-		while (!not_tested.empty() && not_tested.front()->visited) {
-			not_tested.pop_front();
-		}
+		/* Pop off all the nodes that have been visited.*/
+		/*while (!to_test.empty() && to_test.front()->visited) {
+			to_test.pop_front();
+		}*/
 
-		if (not_tested.empty()) {
+		/* Every valid node has already been visited; No path was found. */
+		/*if (to_test.empty()) {
+			return std::vector<vec2>();
+		}*/
+
+		current = to_test.front();
+
+		if (current == end) {
 			break;
 		}
 
-		current = not_tested.front();
 		current->visited = true;
+		to_test.pop_front();
 
 		for (auto neighbour : current->neighbours) {
 			if (!neighbour->visited && !neighbour->obstacle) {
-				not_tested.push_back(neighbour);
-			}
+				float possible_local_goal = current->local_goal + 1.0f;
+				float possible_global_goal = possible_local_goal + distance(neighbour, end);
 
-			float possibly_lower_goal = current->local_goal + distance(current, neighbour);
+				if (std::find(to_test.begin(), to_test.end(), neighbour) == to_test.end()) {
+					neighbour->parent = current;
+					neighbour->local_goal = possible_local_goal;
+					neighbour->global_goal = possible_global_goal;
 
-			if (possibly_lower_goal < neighbour->local_goal) {
-				neighbour->parent = current;
-				neighbour->local_goal = possibly_lower_goal;
-
-				neighbour->global_goal = neighbour->local_goal + distance(neighbour, end);
+					to_test.push_back(neighbour);
+				} else if (possible_global_goal < neighbour->global_goal) {
+					neighbour->parent = current;
+					neighbour->local_goal = possible_local_goal;
+					neighbour->global_goal = possible_global_goal;
+				}
 			}
 		}
 	}

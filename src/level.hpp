@@ -8,18 +8,18 @@
 struct tileset {
 	SDL_Surface* image = nullptr;
 	char* name = nullptr;
-	i32 tile_w, tile_h;
+	int tile_w, tile_h;
 };
 
 struct tile {
-	i32 id;
-	u32 tileset_id;
+	int id;
+	int tileset_id;
 };
 
 struct tile_layer {
 	tile* tiles = nullptr;
 	char* name = nullptr;
-	i32 width, height;
+	int width, height;
 };
 
 class level {
@@ -30,7 +30,7 @@ public:
 		bool visited = false;
 		float global_goal;
 		float local_goal;
-		i32 x, y;
+		int x, y;
 		std::vector<node*> neighbours;
 		node* parent = nullptr;
 	};
@@ -40,12 +40,12 @@ private:
 	std::vector<tile_layer> layers;
 
 	node* nodes = nullptr;
-	i32 map_width, map_height;
+	int map_width, map_height;
 public:	
 	~level();
 
 	void draw(const renderer& ren) const;
 	bool load(const char* filename);
 
-	std::vector<vec2> find_path(i32 start_x, i32 start_y, i32 end_x, i32 end_y);
+	std::vector<vec2> find_path(int start_x, int start_y, int end_x, int end_y);
 };

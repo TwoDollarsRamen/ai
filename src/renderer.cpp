@@ -17,8 +17,8 @@ void renderer::draw(const vec2& position, SDL_Surface* surface, const SDL_Rect& 
 	/* The destination position, width and height are multiplied
 	 * by the pixel size, because this game uses pixel art. */
 	SDL_Rect dst = {
-		(i32)position.x * pixel_size,
-		(i32)position.y * pixel_size,
+		(int)position.x * pixel_size,
+		(int)position.y * pixel_size,
 		rect.w * pixel_size,
 		rect.h * pixel_size
 	};
@@ -38,8 +38,8 @@ SDL_Surface* texture_manager::load(const char* filename) {
 	}
 
 	/* Load and decompress the raw pixel data using STB image. */
-	i32 width, height, component_count;
-	u8* pixels = stbi_load(filename, &width, &height, &component_count, 0);
+	int width, height, component_count;
+	unsigned char* pixels = stbi_load(filename, &width, &height, &component_count, 0);
 	if (!pixels) {
 		fprintf(stderr, "Failed to load %s: %s.\n", filename, stbi_failure_reason());
 		return nullptr;
@@ -48,10 +48,10 @@ SDL_Surface* texture_manager::load(const char* filename) {
 	/* Magic courtosy of:
 	 *
 	 * https://www.silbinarywolf.com/post/124379907558/loading-png-files-with-stb-image-and-sdl2 */
-	i32 pitch;
+	int pitch;
 	pitch = width * component_count;
 	pitch = (pitch + 3) & ~3;
-	i32 red_mask, green_mask, blue_mask, alpha_mask;
+	int red_mask, green_mask, blue_mask, alpha_mask;
 
 #if SDL_BYTEORDER == SDL_LIL_ENDIAN
 	red_mask =   0x000000FF;
@@ -59,7 +59,7 @@ SDL_Surface* texture_manager::load(const char* filename) {
 	blue_mask =  0x00FF0000;
 	alpha_mask = (component_count == 4) ? 0xFF000000 : 0;
 #else
-	i32 s = (component_count == 4) ? 0 : 8;
+	int s = (component_count == 4) ? 0 : 8;
 	red_mask =   0xFF000000 >> s;
 	green_mask = 0x00FF0000 >> s;
 	blue_mask =  0x0000FF00 >> s;
@@ -76,8 +76,6 @@ SDL_Surface* texture_manager::load(const char* filename) {
 		stbi_image_free(pixels);
 		return nullptr;
 	}
-
-	stbi_image_free(pixels);
 
 	instance().cache[std::string(filename)] = surface;
 

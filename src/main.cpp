@@ -3,7 +3,7 @@
 #include "level.hpp"
 #include "renderer.hpp"
 
-i32 main(i32 argc, char** argv) {
+int main(int argc, char** argv) {
 	SDL_Init(SDL_INIT_VIDEO);
 
 	SDL_Window* window = SDL_CreateWindow("game",
@@ -17,7 +17,7 @@ i32 main(i32 argc, char** argv) {
 	level l;
 	l.load("res/level.dat");
 
-	auto path = l.find_path(3, 3, 5, 8);
+	auto path = l.find_path(3, 3, 5, 5);
 
 	bool running = true;
 	while (running) {
