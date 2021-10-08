@@ -198,7 +198,29 @@ bool level::load(const char* filename) {
 			}
 			break;
 		}
+		case 1: {
+			want_storage = false;
+		
+			int object_count;
+			file.read(buf(object_count), 4);
+
+			for (int ii = 0; ii < object_count; ii++) {
+				SDL_Rect rect;
+
+				file.read(buf(rect.x), 4);
+				file.read(buf(rect.y), 4);
+				file.read(buf(rect.w), 4);
+				file.read(buf(rect.h), 4);
+
+				if (strcmp("collisions", current.name) == 0) {
+					collisions.push_back(rect);
+				}
+			}
+			break;
+		}
 		default:
+			want_storage = false;
+		
 			fprintf(stderr, "Unkown layer type: %u\n", layer_type);
 			break;
 		};
@@ -247,16 +269,6 @@ std::vector<vec2> level::find_path(int start_x, int start_y, int end_x, int end_
 					return a->global_goal < b->global_goal;
 				});
 
-		/* Pop off all the nodes that have been visited.*/
-		/*while (!to_test.empty() && to_test.front()->visited) {
-			to_test.pop_front();
-		}*/
-
-		/* Every valid node has already been visited; No path was found. */
-		/*if (to_test.empty()) {
-			return std::vector<vec2>();
-		}*/
-
 		current = to_test.front();
 
 		if (current == end) {
@@ -292,6 +304,11 @@ std::vector<vec2> level::find_path(int start_x, int start_y, int end_x, int end_
 		r.push_back(vec2(p->x, p->y));
 		p = p->parent;
 	}
+
+	/* Since the first value in the vector is the end node, the vector
+	 * must be reversed. */
+
+	std::reverse(r.begin(), r.end());
 
 	return r;
 }

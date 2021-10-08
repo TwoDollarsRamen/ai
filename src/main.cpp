@@ -2,6 +2,8 @@
 
 #include "level.hpp"
 #include "renderer.hpp"
+#include "agent.hpp"
+#include "world.hpp"
 
 int main(int argc, char** argv) {
 	SDL_Init(SDL_INIT_VIDEO);
@@ -12,12 +14,10 @@ int main(int argc, char** argv) {
 
 	renderer ren(window, 2);
 
-	SDL_Surface* atlas = texture_manager::load("res/atlas.png");
+	uint64_t now = 0, last = 0;
+	double ts = 0.0;
 
-	level l;
-	l.load("res/level.dat");
-
-	auto path = l.find_path(3, 3, 5, 5);
+	world w("res/level.dat");
 
 	bool running = true;
 	while (running) {
@@ -26,15 +26,19 @@ int main(int argc, char** argv) {
 			if (e.type == SDL_QUIT) {
 				running = false;
 			}
+
+			w.update_events(e);
 		}
+
+		now = SDL_GetPerformanceCounter();
+		ts = (float)(now - last) / (double)SDL_GetPerformanceFrequency();
+		last = now;
+
+		w.tick(ts);
 
 		ren.clear();
 
-		l.draw(ren);
-
-		for (const auto& node : path) {
-			ren.draw(vec2(node.x * 16, node.y * 16), atlas, { 64, 144, 16, 16 });
-		}
+		w.draw(ren);
 
 		SDL_UpdateWindowSurface(window);
 	}

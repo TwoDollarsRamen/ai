@@ -41,7 +41,9 @@ private:
 
 	node* nodes = nullptr;
 	int map_width, map_height;
-public:	
+public:
+	std::vector<SDL_Rect> collisions;
+
 	~level();
 
 	void draw(const renderer& ren) const;
