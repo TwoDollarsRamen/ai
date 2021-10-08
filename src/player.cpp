@@ -3,7 +3,7 @@
 player::player() :
 	spr(texture_manager::load("res/atlas.png"), SDL_Rect { 3, 65, 10, 15 }),
 	position(32.0f, 64.0f),
-	velocity(0.0f, 0.0f),
+	collider(0, 0, 10, 15),
 	speed(50.0f),
 
 	up_pressed(false),
@@ -53,5 +53,15 @@ void player::draw(const renderer& ren) {
 }
 
 void player::resolve_collisions(const std::vector<SDL_Rect>& rects) {
+	SDL_Rect player_rect = {
+		(int)position.x + collider.x,
+		(int)position.y + collider.y,
+		collider.w, collider.h
+	};
 
+	for (const auto& rect : rects) {
+		if (rect_overlap(player_rect, rect)) {
+			printf("hi\n");
+		}
+	}
 }

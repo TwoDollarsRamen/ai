@@ -17,8 +17,8 @@ private:
 	     left_pressed,
 	     right_pressed;
 public:
+	SDL_Rect collider;
 	vec2 position;
-	vec2 velocity;
 
 	player();
 
