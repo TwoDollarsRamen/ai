@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="17" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="6">
+<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="17" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="11">
  <editorsettings>
   <export target="level.dat" format="dat"/>
  </editorsettings>
@@ -42,7 +42,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer id="3" name="agent mask" width="17" height="15" locked="1">
+ <layer id="3" name="agent mask" width="17" height="15" visible="0" locked="1">
   <data encoding="csv">
 25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,
 25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,
@@ -62,10 +62,11 @@
 </data>
  </layer>
  <objectgroup id="4" name="collisions">
-  <object id="1" x="0" y="0" width="272" height="32"/>
-  <object id="2" x="256" y="32" width="16" height="208"/>
+  <object id="1" x="0" y="0" width="272" height="23"/>
+  <object id="2" x="256" y="13.3333" width="16" height="226.667"/>
   <object id="3" x="0" y="224" width="256" height="16"/>
-  <object id="4" x="0" y="32" width="16" height="192"/>
+  <object id="4" x="0" y="17" width="16" height="207"/>
   <object id="5" x="176" y="128" width="32" height="32"/>
+  <object id="10" x="176" y="16" width="16" height="32"/>
  </objectgroup>
 </map>

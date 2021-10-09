@@ -14,10 +14,4 @@ struct vec2 {
 	vec2(float x, float y) : x(x), y(y) {}
 };
 
-static inline bool rect_overlap(SDL_Rect a, SDL_Rect b) {
-	return (
-		a.x + a.w > b.x &&
-		a.y + a.h > b.y &&
-		a.x < b.x + b.w &&
-		a.y < b.y + b.h);
-}
+bool rect_overlap(const SDL_Rect& a, const SDL_Rect& b, vec2& normal);
