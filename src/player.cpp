@@ -51,26 +51,3 @@ void player::tick(float ts) {
 void player::draw(const renderer& ren) {
 	ren.draw(position, spr);
 }
-
-void player::resolve_collisions(const std::vector<SDL_Rect>& rects) {
-	SDL_Rect player_rect = {
-		(int)position.x + collider.x,
-		(int)position.y + collider.y,
-		collider.w, collider.h
-	};
-
-	for (const auto& rect : rects) {
-		vec2 normal;
-		if (rect_overlap(player_rect, rect, normal)) {
-			if (normal.x == 1) {
-				position.x = rect.x - player_rect.w;
-			} else if (normal.x == -1) {
-				position.x = rect.x + rect.w;
-			} else if (normal.y == 1) {
-				position.y = rect.y - player_rect.h;
-			} else if (normal.y == -1) {
-				position.y = rect.y + rect.h;
-			} 
-		}
-	}
-}

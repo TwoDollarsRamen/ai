@@ -10,10 +10,10 @@ void world::update_events(const SDL_Event& e) {
 
 void world::tick(float ts) {
 	p.tick(ts);
-	p.resolve_collisions(l.collisions);
+	l.resolve_collisions_with_body(p.collider, p.position);
 
 	for (auto& a : l.agents) {
-		a.tick(ts, l);
+		a.tick(ts, p, l);
 	}
 }
 

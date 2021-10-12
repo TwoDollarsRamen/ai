@@ -335,3 +335,27 @@ vec2 level::get_random_node() {
 
 	return vec2(node->x * grid_size, node->y * grid_size);
 }
+
+void level::resolve_collisions_with_body(const SDL_Rect& body_collider, vec2& body_position) const {
+	SDL_Rect body_rect = {
+		(int)body_position.x + body_collider.x,
+		(int)body_position.y + body_collider.y,
+		body_collider.w, body_collider.h
+	};
+
+	for (const auto& rect : collisions) {
+		vec2 normal;
+		if (rect_overlap(body_rect, rect, normal)) {
+			if (normal.x == 1) {
+				body_position.x = rect.x - body_rect.w;
+			} else if (normal.x == -1) {
+				body_position.x = rect.x + rect.w;
+			} else if (normal.y == 1) {
+				body_position.y = rect.y - body_rect.h;
+			} else if (normal.y == -1) {
+				body_position.y = rect.y + rect.h;
+			} 
+		}
+	}
+
+}

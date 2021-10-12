@@ -27,5 +27,4 @@ public:
 	void update_events(const SDL_Event& e);
 	void tick(float ts);
 	void draw(const renderer& ren);
-	void resolve_collisions(const std::vector<SDL_Rect>& rects);
 };

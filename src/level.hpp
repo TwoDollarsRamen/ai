@@ -59,4 +59,8 @@ public:
 	std::vector<vec2> find_path(int start_x, int start_y, int end_x, int end_y);
 
 	vec2 get_random_node();
+
+	/* Generic functions to resolve collisions with a body. Modifies the body's
+	 * position should a collision occur.*/
+	void resolve_collisions_with_body(const SDL_Rect& body_collider, vec2& body_position) const;
 };
