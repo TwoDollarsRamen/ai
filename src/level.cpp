@@ -161,7 +161,7 @@ bool level::load(const char* filename) {
 						file.read(buf(tile_id), 4);
 
 						nodes[x + y * map_width] = node {
-							.obstacle = false,
+							.obstacle = tile_id != -1,
 							.visited = false,
 							.global_goal = 0.0f,
 							.local_goal = 0.0f,
@@ -200,9 +200,11 @@ bool level::load(const char* filename) {
 		}
 		case 1: {
 			want_storage = false;
-		
+
 			int object_count;
 			file.read(buf(object_count), 4);
+
+			SDL_Surface* agent_atlas = texture_manager::load("res/atlas.png");
 
 			for (int ii = 0; ii < object_count; ii++) {
 				SDL_Rect rect;
@@ -214,13 +216,19 @@ bool level::load(const char* filename) {
 
 				if (strcmp("collisions", current.name) == 0) {
 					collisions.push_back(rect);
+				} else if (strcmp("agents", current.name) == 0) {
+					agent a(agent_atlas);
+
+					a.position = vec2(rect.x, rect.y);
+
+					agents.push_back(a);
 				}
 			}
 			break;
 		}
 		default:
 			want_storage = false;
-		
+
 			fprintf(stderr, "Unkown layer type: %u\n", layer_type);
 			break;
 		};
@@ -238,6 +246,10 @@ bool level::load(const char* filename) {
 }
 
 std::vector<vec2> level::find_path(int start_x, int start_y, int end_x, int end_y) {
+	if (!(start_x < map_width && start_y < map_height && start_x >= 0 && start_y >= 0)) {
+		return std::vector<vec2>();
+	}
+
 	/* Reset the navigation graph */
 	for (int y = 0; y < map_height; y++) {
 		for (int x = 0; x < map_width; x++) {
@@ -307,8 +319,19 @@ std::vector<vec2> level::find_path(int start_x, int start_y, int end_x, int end_
 
 	/* Since the first value in the vector is the end node, the vector
 	 * must be reversed. */
-
 	std::reverse(r.begin(), r.end());
 
 	return r;
+}
+
+vec2 level::get_random_node() {
+	const int min = 0;
+	const int max = map_width * map_height;
+
+	const node* node;
+	do {
+		node = nodes + ((rand() % (max - min + 1)) + min);
+	} while (node->obstacle);
+
+	return vec2(node->x * grid_size, node->y * grid_size);
 }

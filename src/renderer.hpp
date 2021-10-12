@@ -10,6 +10,7 @@
 struct sprite {
 	SDL_Surface* surface;
 	SDL_Rect rect;
+	bool flip = false;
 
 	sprite(SDL_Surface* surface, SDL_Rect rect) : surface(surface), rect(rect) {}
 };

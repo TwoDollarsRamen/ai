@@ -4,6 +4,7 @@
 
 #include "common.hpp"
 #include "renderer.hpp"
+#include "agent.hpp"
 
 struct tileset {
 	SDL_Surface* image = nullptr;
@@ -43,6 +44,12 @@ private:
 	int map_width, map_height;
 public:
 	std::vector<SDL_Rect> collisions;
+	std::vector<agent> agents;
+
+	/*sprite key_sprite;*/
+
+	vec2 key_pos;
+	vec2 door_pos;
 
 	~level();
 
@@ -50,4 +57,6 @@ public:
 	bool load(const char* filename);
 
 	std::vector<vec2> find_path(int start_x, int start_y, int end_x, int end_y);
+
+	vec2 get_random_node();
 };

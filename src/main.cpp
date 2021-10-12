@@ -6,6 +6,8 @@
 #include "world.hpp"
 
 int main(int argc, char** argv) {
+	srand(time(0));
+
 	SDL_Init(SDL_INIT_VIDEO);
 
 	SDL_Window* window = SDL_CreateWindow("game",
@@ -33,6 +35,10 @@ int main(int argc, char** argv) {
 		now = SDL_GetPerformanceCounter();
 		ts = (float)(now - last) / (double)SDL_GetPerformanceFrequency();
 		last = now;
+
+		if (ts > 1.0f) {
+			ts = 1.0f;
+		}
 
 		w.tick(ts);
 

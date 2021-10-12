@@ -12,8 +12,8 @@ void world::tick(float ts) {
 	p.tick(ts);
 	p.resolve_collisions(l.collisions);
 
-	for (auto& a : agents) {
-		a.tick(ts);
+	for (auto& a : l.agents) {
+		a.tick(ts, l);
 	}
 }
 
@@ -22,7 +22,7 @@ void world::draw(const renderer& ren) {
 
 	p.draw(ren);
 
-	for (auto& a : agents) {
+	for (auto& a : l.agents) {
 		a.draw(ren);
 	}
 }

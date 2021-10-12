@@ -10,8 +10,6 @@ struct world {
 	level l;
 	player p;
 
-	std::vector<agent> agents;
-
 	world(const char* level_path);
 
 	/* To be called in the `SDL_PollEvent' loop. */

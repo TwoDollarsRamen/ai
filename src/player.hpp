@@ -16,6 +16,8 @@ private:
 	     down_pressed,
 	     left_pressed,
 	     right_pressed;
+
+	bool has_key = false;
 public:
 	SDL_Rect collider;
 	vec2 position;
