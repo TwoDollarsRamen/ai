@@ -9,8 +9,7 @@ void world::update_events(const SDL_Event& e) {
 }
 
 void world::tick(float ts) {
-	p.tick(ts);
-	l.resolve_collisions_with_body(p.collider, p.position);
+	p.tick(ts, l);
 
 	for (auto& a : l.agents) {
 		a.tick(ts, p, l);
@@ -20,7 +19,7 @@ void world::tick(float ts) {
 void world::draw(const renderer& ren) {
 	l.draw(ren);
 
-	p.draw(ren);
+	p.draw(ren, l);
 
 	for (auto& a : l.agents) {
 		a.draw(ren);

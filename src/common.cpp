@@ -38,3 +38,14 @@ bool rect_overlap(const SDL_Rect& a, const SDL_Rect& b, vec2& normal) {
 
 	return true;
 }
+
+bool rect_overlap(const SDL_Rect& a, const SDL_Rect& b) {
+	if (!(
+		a.x + a.w > b.x &&
+		a.y + a.h > b.y &&
+		a.x < b.x + b.w &&
+		a.y < b.y + b.h)) {
+		return false;
+	}
+	return true;
+}

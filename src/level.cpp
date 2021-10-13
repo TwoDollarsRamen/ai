@@ -9,6 +9,12 @@
 
 #define buf(v_) (char*)&(v_)
 
+level::level() :
+	key_sprite(texture_manager::load("res/atlas.png"), SDL_Rect { 88, 146, 24, 10 }),
+	door_sprite(texture_manager::load("res/atlas.png"), SDL_Rect { 114, 144, 16, 16 }) {
+
+}
+
 level::~level() {
 	for (const auto& layer : layers) {
 		free(layer.tiles);
@@ -43,6 +49,14 @@ void level::draw(const renderer& ren) const {
 			}
 		}
 	}
+
+	for (const auto& d : doors) {
+		ren.draw(vec2(d.x, d.y), door_sprite);
+	}
+
+	for (const auto& k : keys) {
+		ren.draw(vec2(k.x, k.y), key_sprite);
+	}
 }
 
 bool level::load(const char* filename) {
@@ -50,7 +64,7 @@ bool level::load(const char* filename) {
 	file.open(filename, std::ios_base::in | std::ios_base::binary);
 
 	if (!file.good()) {
-		fprintf(stderr, "Failed to load map: %s: Couldn't open file\n", filename);
+		fprintf(stderr, "Failed to load map: %s: Couldn't open file.\n", filename);
 		return false;
 	}
 
@@ -222,6 +236,10 @@ bool level::load(const char* filename) {
 					a.position = vec2(rect.x, rect.y);
 
 					agents.push_back(a);
+				} else if (strcmp("doors", current.name) == 0) {
+					doors.push_back(rect);
+				} else if (strcmp("keys", current.name) == 0) {
+					keys.push_back(rect);
 				}
 			}
 			break;
@@ -357,5 +375,4 @@ void level::resolve_collisions_with_body(const SDL_Rect& body_collider, vec2& bo
 			} 
 		}
 	}
-
 }

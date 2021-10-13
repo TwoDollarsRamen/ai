@@ -4,6 +4,8 @@
 
 #include "renderer.hpp"
 
+class level;
+
 /* Manages the player and its associated state. */
 class player {
 private:
@@ -25,6 +27,6 @@ public:
 	player();
 
 	void update_events(const SDL_Event& e);
-	void tick(float ts);
-	void draw(const renderer& ren);
+	void tick(float ts, level& l);
+	void draw(const renderer& ren, const level& l);
 };

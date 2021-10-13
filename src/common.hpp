@@ -6,6 +6,7 @@
 
 #include <SDL2/SDL.h>
 
+/* A basic 2D vector class. */
 struct vec2 {
 	float x, y;
 
@@ -30,7 +31,7 @@ struct vec2 {
 	}
 
 	static float angle(const vec2& a, const vec2& b) {
-		return 1.0 - (cosf(a.dot(b) / (a.magnitude() * b.magnitude())));
+		return 1.0 - (cos(a.dot(b) / (a.magnitude() * b.magnitude())));
 	}
 };
 
@@ -38,5 +39,9 @@ struct vec2 {
  *
  * If the rectangles are overlapping, the normal
  * of the collision is placed in `normal', useful
- * for collision resolution. */
+ * for collision resolution. There is also a version
+ * that simply checks for an overlap, without outputting
+ * the normal; This is useful when the collision is not
+ * going to be resolved. */
 bool rect_overlap(const SDL_Rect& a, const SDL_Rect& b, vec2& normal);
+bool rect_overlap(const SDL_Rect& a, const SDL_Rect& b);

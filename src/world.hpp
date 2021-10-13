@@ -5,10 +5,19 @@
 #include "renderer.hpp"
 #include "agent.hpp"
 
+/* A blackboard event */
+struct event {
+	union {
+		vec2 player_spotted_event;
+	} as;
+};
+
 /* Manages the player, level, and AI agents. */
 struct world {
 	level l;
 	player p;
+
+	std::vector<event> blackboard;
 
 	world(const char* level_path);
 

@@ -41,12 +41,6 @@ struct agent {
 
 	void switch_state(const state& newstate);
 
-	/* Check if the player is inside the cone of vision.
-	 *
-	 * The way this is done is by checking if the player is inside the
-	 * agent's range, and checking if it is facing towards the player.
-	 *
-	 * Since the range check is essentially a circle check, this produces
-	 * a cone shaped-check when combined with the face check. */
+	/* Check if the player is inside the cone of vision. */
 	bool cone_of_vision(const player& player, const vec2& direction) const;
 };

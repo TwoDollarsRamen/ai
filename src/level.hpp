@@ -43,14 +43,16 @@ private:
 	node* nodes = nullptr;
 	int map_width, map_height;
 public:
+	const sprite door_sprite;
+	const sprite key_sprite;
+
 	std::vector<SDL_Rect> collisions;
 	std::vector<agent> agents;
 
-	/*sprite key_sprite;*/
+	std::vector<SDL_Rect> doors;
+	std::vector<SDL_Rect> keys;
 
-	vec2 key_pos;
-	vec2 door_pos;
-
+	level();
 	~level();
 
 	void draw(const renderer& ren) const;

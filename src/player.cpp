@@ -1,4 +1,5 @@
 #include "player.hpp"
+#include "level.hpp"
 
 player::player() :
 	spr(texture_manager::load("res/atlas.png"), SDL_Rect { 3, 65, 10, 15 }),
@@ -33,7 +34,7 @@ void player::update_events(const SDL_Event& e) {
 	}
 }
 
-void player::tick(float ts) {
+void player::tick(float ts, level& l) {
 	if (left_pressed) {
 		position.x -= speed * ts;
 	}
@@ -46,8 +47,43 @@ void player::tick(float ts) {
 	if (down_pressed) {
 		position.y += speed * ts;
 	}
+
+	l.resolve_collisions_with_body(collider, position);
+
+	SDL_Rect player_rect = {
+		(int)position.x + collider.x,
+		(int)position.y + collider.y,
+		collider.w, collider.h
+	};
+
+	/* Check for colllisions with the key */
+	for (const auto& k : l.keys) {
+		if (rect_overlap(player_rect, k)) {
+			has_key = true;
+
+			/* Clear the keys vector to create the illusion of
+			 * it being destroyed.
+			 *
+			 * Only one key is expected, so this is fine.*/
+			l.keys.clear();
+		}
+	}
+
+	/* Check for collisions with the door. */
+	if (has_key) {
+		for (const auto& d : l.doors) {
+			if (rect_overlap(player_rect, d)) {
+				/* TODO: switch to win screen */
+				exit(0);
+			}
+		}
+	}
 }
 
-void player::draw(const renderer& ren) {
+void player::draw(const renderer& ren, const level& l) {
 	ren.draw(position, spr);
+
+	if (has_key) {
+		ren.draw(vec2(0, 0), l.key_sprite);
+	}
 }
