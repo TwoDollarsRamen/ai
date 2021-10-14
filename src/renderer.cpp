@@ -5,7 +5,7 @@
 #include "renderer.hpp"
 
 /* Converts a UTF-8 character to a codepoint.
- * 
+ *
  * Based on the information found in this stack overflow answer:
  * https://stackoverflow.com/questions/6240055/manually-converting-unicode-codepoints-into-utf-8-and-utf-16
  *
@@ -30,6 +30,7 @@ static const char* utf8_to_codepoint(const char* text, unsigned int* dst) {
 
 glyph_set::~glyph_set() {
 	SDL_FreeSurface(atlas);
+	free(image_data);
 }
 
 font::font(const char* filename, float size) : size(size) {
@@ -77,6 +78,10 @@ font::font(const char* filename, float size) : size(size) {
 }
 
 font::~font() {
+	for (int i = 0; i < glyph_set_count; i++) {
+		delete sets[i];
+	}
+
 	free(data);
 }
 
@@ -123,17 +128,18 @@ glyph_set* font::load_glyph_set(int index) {
 
 	/* The bitmap created by stb_truetype only contains one channel,
 	 * but SDL expects four, so it has to be converted. */
-	 unsigned char* image = (unsigned char*)malloc(width * height * 4);
-	 for (int src = 0, dst = 0; src < width * height; dst += 4, src++) {
+	unsigned char* image = (unsigned char*)malloc(width * height * 4);
+	for (int src = 0, dst = 0; src < width * height; dst += 4, src++) {
 		auto a = pixels[src];
 
 		image[dst + 0] = 255;
 		image[dst + 1] = 255;
 		image[dst + 2] = 255;
 		image[dst + 3] = a;
-	 }
-	 free(pixels);
+	}
+	free(pixels);
 
+	set->image_data = image;
 	set->atlas = SDL_CreateRGBSurfaceWithFormatFrom((void*)image, width, height,
 		32, 4 * width, SDL_PIXELFORMAT_RGBA32);
 
@@ -210,7 +216,7 @@ SDL_Surface* texture_manager::load(const char* filename) {
 	if (instance().cache.count(std::string(filename)) != 0) {
 		/* No need to load the texture again; It is already in
 		 * the cache, so we can simply return the cached version. */
-		return instance().cache.at(std::string(filename));
+		return instance().cache.at(std::string(filename)).first;
 	}
 
 	/* Load and decompress the raw pixel data using STB image. */
@@ -256,13 +262,14 @@ SDL_Surface* texture_manager::load(const char* filename) {
 		return nullptr;
 	}
 
-	instance().cache[std::string(filename)] = surface;
+	instance().cache[std::string(filename)] = std::make_pair(surface, pixels);
 
 	return surface;
 }
 
 texture_manager::~texture_manager() {
 	for (const auto& p : instance().cache) {
-		SDL_FreeSurface(p.second);
+		SDL_FreeSurface(p.second.first);
+		stbi_image_free(p.second.second);
 	}
 }

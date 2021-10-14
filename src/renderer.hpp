@@ -15,6 +15,7 @@ class renderer;
 
 struct glyph_set {
 	SDL_Surface* atlas;
+	unsigned char* image_data;
 	stbtt_bakedchar glyphs[256];
 
 	~glyph_set();
@@ -66,7 +67,9 @@ public:
  * ensure they aren't loaded more than once. */
 class texture_manager {
 private:
-	std::unordered_map<std::string, SDL_Surface*> cache;
+	/* A pointer to the pixel data must be kept so that it can be freed,
+	 * since the pixel data isn't managed by SDL. */
+	std::unordered_map<std::string, std::pair<SDL_Surface*, unsigned char*>> cache;
 public:
 	static inline texture_manager& instance() {
 		static texture_manager i;
