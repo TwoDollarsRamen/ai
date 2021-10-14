@@ -49,14 +49,10 @@ struct sprite {
 };
 
 class renderer {
-private:
+public:
+	const int pixel_size;
 	mutable SDL_Window* window;
 
-	const int pixel_size;
-
-	friend class font;
-	friend class menu;
-public:
 	renderer(SDL_Window* window, int pixel_size) : window(window), pixel_size(pixel_size) {}
 
 	void clear() const;

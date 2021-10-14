@@ -74,8 +74,22 @@ void player::tick(float ts, world& w, level& l) {
 	if (has_key) {
 		for (const auto& d : l.doors) {
 			if (rect_overlap(player_rect, d)) {
-				w.change_state(world::state::MAIN_MENU);
+				w.win = true;
+				w.change_state(world::state::GAME_OVER);
 			}
+		}
+	}
+
+	/* Check for collisions with agents */
+	for (const auto& a : l.agents) {
+		SDL_Rect agent_rect = {
+			a.collider.x + a.position.x,
+			a.collider.y + a.position.y,
+			a.collider.w, a.collider.h};
+
+		if (rect_overlap(player_rect, agent_rect)) {
+			w.win = false;
+			w.change_state(world::state::GAME_OVER);
 		}
 	}
 }
