@@ -5,6 +5,7 @@
 #include "renderer.hpp"
 
 class level;
+class world;
 
 /* Manages the player and its associated state. */
 class player {
@@ -27,6 +28,6 @@ public:
 	player();
 
 	void update_events(const SDL_Event& e);
-	void tick(float ts, level& l);
+	void tick(float ts, world& w, level& l);
 	void draw(const renderer& ren, const level& l);
 };

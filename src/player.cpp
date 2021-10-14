@@ -1,5 +1,6 @@
 #include "player.hpp"
 #include "level.hpp"
+#include "world.hpp"
 
 player::player() :
 	spr(texture_manager::load("res/atlas.png"), SDL_Rect { 3, 65, 10, 15 }),
@@ -34,7 +35,7 @@ void player::update_events(const SDL_Event& e) {
 	}
 }
 
-void player::tick(float ts, level& l) {
+void player::tick(float ts, world& w, level& l) {
 	if (left_pressed) {
 		position.x -= speed * ts;
 	}
@@ -73,8 +74,7 @@ void player::tick(float ts, level& l) {
 	if (has_key) {
 		for (const auto& d : l.doors) {
 			if (rect_overlap(player_rect, d)) {
-				/* TODO: switch to win screen */
-				exit(0);
+				w.change_state(world::state::MAIN_MENU);
 			}
 		}
 	}
@@ -87,3 +87,4 @@ void player::draw(const renderer& ren, const level& l) {
 		ren.draw(vec2(0, 0), l.key_sprite);
 	}
 }
+

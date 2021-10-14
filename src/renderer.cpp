@@ -157,7 +157,20 @@ glyph_set* font::get_glyph_set(int codepoint) {
 }
 
 vec2 font::text_dimentions(const char* text) {
-	return vec2(0, 0);
+	int w = 0;
+
+	while (*text) {
+		unsigned int codepoint = 0;
+
+		text = utf8_to_codepoint(text, &codepoint);
+
+		glyph_set* set = get_glyph_set(codepoint);
+		auto glyph = &set->glyphs[codepoint & 0xff];
+
+		w += glyph->xadvance;
+	}
+
+	return vec2(w, height);
 }
 
 void font::draw_text(const renderer& ren, vec2 position, const char* text) {

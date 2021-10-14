@@ -18,15 +18,13 @@ int main(int argc, char** argv) {
 
 	renderer ren(window, 2);
 
-	font main_font("res/DejaVuSans.ttf", 14.0f);
-
 	uint64_t now = 0, last = 0;
 	double ts = 0.0;
 
 	world w("res/level.dat");
 
 	bool running = true;
-	while (running) {
+	while (running && !w.want_quit) {
 		SDL_Event e;
 		while (SDL_PollEvent(&e)) {
 			if (e.type == SDL_QUIT) {
@@ -49,7 +47,6 @@ int main(int argc, char** argv) {
 		ren.clear();
 
 		w.draw(ren);
-		main_font.draw_text(ren, vec2(0, 0), "Hello, world!");
 
 		SDL_UpdateWindowSurface(window);
 	}
