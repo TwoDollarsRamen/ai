@@ -1,3 +1,5 @@
+#include <time.h>
+
 #include <SDL2/SDL.h>
 
 #include "level.hpp"
@@ -15,6 +17,8 @@ int main(int argc, char** argv) {
 			800, 600, SDL_WINDOW_SHOWN);
 
 	renderer ren(window, 2);
+
+	font main_font("res/DejaVuSans.ttf", 14.0f);
 
 	uint64_t now = 0, last = 0;
 	double ts = 0.0;
@@ -45,6 +49,7 @@ int main(int argc, char** argv) {
 		ren.clear();
 
 		w.draw(ren);
+		main_font.draw_text(ren, vec2(0, 0), "Hello, world!");
 
 		SDL_UpdateWindowSurface(window);
 	}
