@@ -32,18 +32,25 @@ public:
 	font(const char* filename, float size);
 	~font();
 
+	/* Load a glyph set into memory at the specified index. */
 	glyph_set* load_glyph_set(int index);
+
+	/* Get the glyph set that contains the glyph for a codepoint. */
 	glyph_set* get_glyph_set(int codepoint);
 
+	/* Draw a string of text using this font. */
 	void draw_text(const renderer& renderer, vec2 position, const char* text);
 
+	/* Calculate the width and height for a string of text
+	 * were it rendered using this font. */
 	vec2 text_dimentions(const char* text);
 };
 
+/* A simple wrapper around an SDL_Surface and an SDL_Rect,
+ * so that it is easier to type out. */
 struct sprite {
 	SDL_Surface* surface;
 	SDL_Rect rect;
-	bool flip = false;
 
 	sprite(SDL_Surface* surface, SDL_Rect rect) : surface(surface), rect(rect) {}
 };
@@ -64,7 +71,7 @@ public:
  * ensure they aren't loaded more than once. */
 class texture_manager {
 private:
-	/* A pointer to the pixel data must be kept so that it can be freed,
+	/* A pointer to the raw pixel data must be kept so that it can be freed,
 	 * since the pixel data isn't managed by SDL. */
 	std::unordered_map<std::string, std::pair<SDL_Surface*, unsigned char*>> cache;
 public:

@@ -39,6 +39,11 @@ void world::tick(float ts) {
 	}
 
 	iterating = false;
+
+	/* If any of the tick functions triggered a state
+	 * change, the actual deinit and init calls are
+	 * delayed until the iteration has finished, which is
+	 * here. */
 	if (want_change_state) {
 		change_state(change_to);
 		want_change_state = false;

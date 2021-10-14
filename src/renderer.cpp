@@ -159,6 +159,7 @@ glyph_set* font::get_glyph_set(int codepoint) {
 vec2 font::text_dimentions(const char* text) {
 	int w = 0;
 
+	/* Iterate each character and calculate its width. */
 	while (*text) {
 		unsigned int codepoint = 0;
 
@@ -170,12 +171,21 @@ vec2 font::text_dimentions(const char* text) {
 		w += glyph->xadvance;
 	}
 
+	/* NOTE: This function doesn't take into account any newlines
+	 * in the height calculation, it simply returns the height of the
+	 * font. This is fine for now since the `draw_text' function
+	 * doesn't do anything for newlines anyway. */
 	return vec2(w, height);
 }
 
 void font::draw_text(const renderer& ren, vec2 position, const char* text) {
 	SDL_Surface* backbuffer = SDL_GetWindowSurface(ren.window);
 
+	/* This is rather slow, since each character needs to look up
+	 * the glyph sets which are all heap allocated.
+	 *
+	 * It should be fine since there's not too much text being
+	 * rendered in this application. */
 	while (*text) {
 		unsigned int codepoint = 0;
 
