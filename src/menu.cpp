@@ -18,7 +18,7 @@ void menu::handle_events(const SDL_Event& e) {
 	};
 
 	if (selected_item < 0) {
-		selected_item = items.size() - 1;
+		selected_item = (int)items.size() - 1;
 	}
 
 	if (selected_item > items.size() - 1) {

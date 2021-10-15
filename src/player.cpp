@@ -83,9 +83,9 @@ void player::tick(float ts, world& w, level& l) {
 	/* Check for collisions with agents */
 	for (const auto& a : l.agents) {
 		SDL_Rect agent_rect = {
-			a.collider.x + a.position.x,
-			a.collider.y + a.position.y,
-			a.collider.w, a.collider.h};
+			a.collider.x + (int)a.position.x,
+			a.collider.y + (int)a.position.y,
+			(int)a.collider.w, (int)a.collider.h};
 
 		if (rect_overlap(player_rect, agent_rect)) {
 			w.win = false;

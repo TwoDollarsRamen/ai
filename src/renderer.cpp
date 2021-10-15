@@ -47,7 +47,7 @@ font::font(const char* filename, float size) : size(size) {
 	}
 
 	file.seekg(0, std::ios::end);
-	unsigned int file_size = file.tellg();
+	unsigned int file_size = (unsigned int)file.tellg();
 	file.seekg(0, std::ios::beg);
 
 	data = (unsigned char*)malloc(file_size);
@@ -65,7 +65,7 @@ font::font(const char* filename, float size) : size(size) {
 	int ascent, descent, linegap;
 	stbtt_GetFontVMetrics(&info, &ascent, &descent, &linegap);
 	float scale = stbtt_ScaleForMappingEmToPixels(&info, size);
-	height = (ascent - descent + linegap) * scale + 0.5;
+	height = (int)((ascent - descent + linegap) * scale + 0.5f);
 
 	/* Make the tab and newline characters invisible
 	 * by making their rectangle widths equal to zero.
@@ -120,7 +120,7 @@ glyph_set* font::load_glyph_set(int index) {
 	int ascent, descent, linegap;
 	stbtt_GetFontVMetrics(&info, &ascent, &descent, &linegap);
 	float scale = stbtt_ScaleForMappingEmToPixels(&info, size);
-	int scaled_ascent = ascent * scale + 0.5;
+	int scaled_ascent = (int)(ascent * scale + 0.5f);
 	for (int i = 0; i < 256; i++) {
 		set->glyphs[i].yoff += scaled_ascent;
 		set->glyphs[i].xadvance = floor(set->glyphs[i].xadvance);
@@ -168,14 +168,14 @@ vec2 font::text_dimentions(const char* text) {
 		glyph_set* set = get_glyph_set(codepoint);
 		auto glyph = &set->glyphs[codepoint & 0xff];
 
-		w += glyph->xadvance;
+		w += (int)glyph->xadvance;
 	}
 
 	/* NOTE: This function doesn't take into account any newlines
 	 * in the height calculation, it simply returns the height of the
 	 * font. This is fine for now since the `draw_text' function
 	 * doesn't do anything for newlines anyway. */
-	return vec2(w, height);
+	return vec2((float)w, (float)height);
 }
 
 void font::draw_text(const renderer& ren, vec2 position, const char* text) {
@@ -196,9 +196,9 @@ void font::draw_text(const renderer& ren, vec2 position, const char* text) {
 
 		SDL_Rect src = { glyph->x0, glyph->y0, glyph->x1 - glyph->x0, glyph->y1 - glyph->y0 };
 		SDL_Rect dst = {
-			(int)position.x + glyph->xoff,
-			(int)position.y + glyph->yoff,
-			src.w, src.h
+			(int)position.x + (int)glyph->xoff,
+			(int)position.y + (int)glyph->yoff,
+			(int)src.w, (int)src.h
 		};
 
 		SDL_BlitSurface(set->atlas, &src, backbuffer, &dst);

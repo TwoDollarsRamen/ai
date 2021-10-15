@@ -43,7 +43,7 @@ void level::draw(const renderer& ren) const {
 						.w = set.tile_w,
 						.h = set.tile_h
 					};
-					ren.draw(vec2(x * set.tile_w, y * set.tile_h),
+					ren.draw(vec2((float)x * set.tile_w, (float)y * set.tile_h),
 							surf, sub);
 				}
 			}
@@ -51,11 +51,11 @@ void level::draw(const renderer& ren) const {
 	}
 
 	for (const auto& d : doors) {
-		ren.draw(vec2(d.x, d.y), door_sprite);
+		ren.draw(vec2((float)d.x, (float)d.y), door_sprite);
 	}
 
 	for (const auto& k : keys) {
-		ren.draw(vec2(k.x, k.y), key_sprite);
+		ren.draw(vec2((float)k.x, (float)k.y), key_sprite);
 	}
 }
 
@@ -233,7 +233,7 @@ bool level::load(const char* filename) {
 				} else if (strcmp("agents", current.name) == 0) {
 					agent a(agent_atlas);
 
-					a.position = vec2(rect.x, rect.y);
+					a.position = vec2((float)rect.x, (float)rect.y);
 
 					agents.push_back(a);
 				} else if (strcmp("doors", current.name) == 0) {
@@ -279,7 +279,7 @@ std::vector<vec2> level::find_path(int start_x, int start_y, int end_x, int end_
 	}
 
 	auto distance = [](node* a, node* b) -> float {
-		return sqrtf((a->x - b->x) * (a->x - b->x) + (a->y - b->y) * (a->y - b->y));
+		return sqrtf((float)((a->x - b->x) * (a->x - b->x) + (a->y - b->y) * (a->y - b->y)));
 	};
 
 	auto start = nodes + (start_x + start_y * map_width);
@@ -331,7 +331,7 @@ std::vector<vec2> level::find_path(int start_x, int start_y, int end_x, int end_
 	std::vector<vec2> r;
 	auto p = end;
 	while (p) {
-		r.push_back(vec2(p->x, p->y));
+		r.push_back(vec2((float)p->x, (float)p->y));
 		p = p->parent;
 	}
 
@@ -351,7 +351,7 @@ vec2 level::get_random_node() {
 		node = nodes + ((rand() % (max - min + 1)) + min);
 	} while (node->obstacle);
 
-	return vec2(node->x * grid_size, node->y * grid_size);
+	return vec2((float)node->x * grid_size, (float)node->y * grid_size);
 }
 
 void level::resolve_collisions_with_body(const SDL_Rect& body_collider, vec2& body_position) const {
@@ -365,13 +365,13 @@ void level::resolve_collisions_with_body(const SDL_Rect& body_collider, vec2& bo
 		vec2 normal;
 		if (rect_overlap(body_rect, rect, normal)) {
 			if (normal.x == 1) {
-				body_position.x = rect.x - body_rect.w;
+				body_position.x = (float)rect.x - body_rect.w;
 			} else if (normal.x == -1) {
-				body_position.x = rect.x + rect.w;
+				body_position.x = (float)rect.x + rect.w;
 			} else if (normal.y == 1) {
-				body_position.y = rect.y - body_rect.h;
+				body_position.y = (float)rect.y - body_rect.h;
 			} else if (normal.y == -1) {
-				body_position.y = rect.y + rect.h;
+				body_position.y = (float)rect.y + rect.h;
 			} 
 		}
 	}

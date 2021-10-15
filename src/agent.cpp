@@ -25,8 +25,8 @@ void agent::tick(float ts, const player& player, level& l) {
 
 		const auto& current = path[current_target_idx];
 
-		const float distance_from_current = sqrt(pow(current.x - position.x, 2)
-				+ pow(current.y - position.y, 2));
+		const float distance_from_current = sqrtf(powf(current.x - position.x, 2.0f)
+				+ powf(current.y - position.y, 2.0f));
 
 		const auto direction = vec2(current.x - position.x, current.y - position.y).unit();
 
@@ -89,8 +89,8 @@ void agent::switch_state(const agent::state& newstate) {
 }
 
 bool agent::cone_of_vision(const player& player, const vec2& direction) const {
-	const float distance_from_player = sqrt(pow(player.position.x - position.x, 2)
-			+ pow(player.position.y - position.y, 2));
+	const float distance_from_player = sqrtf(powf(player.position.x - position.x, 2)
+			+ powf(player.position.y - position.y, 2));
 
 	if (distance_from_player < range) {	
 		const auto dir_to_player = vec2(player.position.x - position.x, player.position.y - position.y).unit();

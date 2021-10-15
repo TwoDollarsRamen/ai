@@ -16,7 +16,7 @@ struct vec2 {
 
 	/* Returns the magnitude of the vector. */
 	float magnitude() const {
-		return sqrt(x * x + y * y);
+		return sqrtf(x * x + y * y);
 	}
 
 	/* Returns a new vector that is a normalised
@@ -31,7 +31,7 @@ struct vec2 {
 	}
 
 	static float angle(const vec2& a, const vec2& b) {
-		return 1.0 - (cos(a.dot(b) / (a.magnitude() * b.magnitude())));
+		return 1.0f - (cosf(a.dot(b) / (a.magnitude() * b.magnitude())));
 	}
 };
 

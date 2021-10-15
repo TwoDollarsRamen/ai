@@ -8,7 +8,7 @@
 #include "world.hpp"
 
 int main(int argc, char** argv) {
-	srand(time(0));
+	srand((unsigned int)time(nullptr));
 
 	SDL_Init(SDL_INIT_VIDEO);
 
@@ -19,7 +19,7 @@ int main(int argc, char** argv) {
 	renderer ren(window, 2);
 
 	uint64_t now = 0, last = 0;
-	double ts = 0.0;
+	float ts = 0.0;
 
 	world w("res/level.dat");
 
@@ -35,7 +35,7 @@ int main(int argc, char** argv) {
 		}
 
 		now = SDL_GetPerformanceCounter();
-		ts = (float)(now - last) / (double)SDL_GetPerformanceFrequency();
+		ts = (float)(now - last) / (float)SDL_GetPerformanceFrequency();
 		last = now;
 
 		if (ts > 1.0f) {
