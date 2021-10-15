@@ -46,7 +46,7 @@ void menu::draw(const renderer& ren) {
 			ren.draw(vec2(
 				(x - selector.rect.w * 2) / ren.pixel_size,
 				(y + (dim.y / 2) - (selector.rect.h / 2)) / ren.pixel_size),
-				selector);
+				selector, true);
 		}
 
 		y += dim.y;	

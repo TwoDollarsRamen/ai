@@ -95,10 +95,16 @@ void player::tick(float ts, world& w, level& l) {
 }
 
 void player::draw(const renderer& ren, const level& l) {
+	SDL_Surface* backbuffer = SDL_GetWindowSurface(ren.window);
+
+	/* Position the camera so that the player is in the middle of the screen. */
+	ren.camera_position.x = position.x - (backbuffer->w / (2 * ren.pixel_size));
+	ren.camera_position.y = position.y - (backbuffer->h / (2 * ren.pixel_size));
+
 	ren.draw(position, spr);
 
 	if (has_key) {
-		ren.draw(vec2(0, 0), l.key_sprite);
+		ren.draw(vec2(0, 0), l.key_sprite, true);
 	}
 }
 

@@ -216,23 +216,33 @@ void renderer::clear() const {
 	SDL_FillRect(backbuffer, &screen_rect, 0x0);
 }
 
-void renderer::draw(const vec2& position, SDL_Surface* surface, const SDL_Rect& rect) const {
+void renderer::draw(const vec2& position, SDL_Surface* surface, const SDL_Rect& rect, bool ignore_camera) const {
 	SDL_Surface* backbuffer = SDL_GetWindowSurface(window);
 
 	/* The destination position, width and height are multiplied
 	 * by the pixel size, because this game uses pixel art. */
-	SDL_Rect dst = {
-		(int)position.x * pixel_size,
-		(int)position.y * pixel_size,
-		rect.w * pixel_size,
-		rect.h * pixel_size
-	};
+	SDL_Rect dst;
+	if (ignore_camera) {
+		dst = {
+			(int)(position.x) * pixel_size,
+			(int)(position.y) * pixel_size,
+			rect.w * pixel_size,
+			rect.h * pixel_size
+		};
+	} else {
+		dst = {
+			(int)(position.x - camera_position.x) * pixel_size,
+			(int)(position.y - camera_position.y) * pixel_size,
+			rect.w * pixel_size,
+			rect.h * pixel_size
+		};
+	}
 
 	SDL_BlitScaled(surface, &rect, backbuffer, &dst);
 }
 
-void renderer::draw(const vec2& position, const sprite& sprite) const {
-	draw(position, sprite.surface, sprite.rect);
+void renderer::draw(const vec2& position, const sprite& sprite, bool ignore_camera) const {
+	draw(position, sprite.surface, sprite.rect, ignore_camera);
 }
 
 SDL_Surface* texture_manager::load(const char* filename) {

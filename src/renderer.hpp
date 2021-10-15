@@ -60,11 +60,13 @@ public:
 	const int pixel_size;
 	mutable SDL_Window* window;
 
+	mutable vec2 camera_position;
+
 	renderer(SDL_Window* window, int pixel_size) : window(window), pixel_size(pixel_size) {}
 
 	void clear() const;
-	void draw(const vec2& position, SDL_Surface* surface, const SDL_Rect& rect) const;
-	void draw(const vec2& position, const sprite& sprite) const;
+	void draw(const vec2& position, SDL_Surface* surface, const SDL_Rect& rect, bool ignore_camera = false) const;
+	void draw(const vec2& position, const sprite& sprite, bool ignore_camera = false) const;
 };
 
 /* Singleton responsible for loading and caching textures to
